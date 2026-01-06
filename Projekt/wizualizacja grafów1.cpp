@@ -53,11 +53,15 @@ int main()
         pawns.push_back(pawn);
         pawn_selected.push_back(false);
     }
+    //window.display();
+    //for (int i=0; i>-1;i++) ;//opóŸnienie czasowe typu sleep
+    //sleep(200s);
     // Mouse input
     sf::Vector2i mouse_pos;
-
+    printf("przedwhilem");
     while (window.isOpen())
     {
+        printf("whilem");
         sf::Event event;
         while (window.pollEvent(event))
         {

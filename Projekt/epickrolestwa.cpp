@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <SFML/Graphics.hpp>
 /*#include <memory>
 #include <sstream>
 #include <vector>
@@ -10,8 +11,312 @@
 #include <cstdlib>
 #include <ctime>*/
 
+using namespace std; using namespace sf;
+
+string plikTerytoriow = "Terytoria.txt";
+//predeklaracja klas
+class Gracz;
+class Runda;
+class Pionek;
+class Terytorium;
+class Region;
+
+class Runda
+{
+public:
+    unsigned int aktywny=0;
+    bool budowa;
+    bool badania;
+    bool rozwoj;
+    bool patrol;
+    bool misja;
+    bool handel;
+    bool koniec;
+
+    //procedury
+    Runda(int akt)
+    {
+
+    }
+    ~Runda(){}
+
+    void zakoncz()
+    {
+
+    }
+};
+
+
+class Gracz
+{
+protected:
+    string kolor;//zamiana na kolor typu pozycyjnego?
+    string nazwa;
+
+    //stopnie rozwoju
+    unsigned int poziomWiezy;
+    unsigned int poziomMagii;
+    //plansze
+    vector<Pionek>pionki;//Lub: zmiana na tablice statyczn¹ i poprostu dania nulla jako region i umieszczenia orzy rozwoju
+    //Pionek pionki[7];
+
+    //zasoby
+    unsigned int zywnosc;//3
+    unsigned int ruda;//1
+    unsigned int mana;//2
+public:
+    Gracz(string kol, string nazw)
+    {
+
+    }
+    ~Gracz(){}
+    //surowce
+    void setSurowceStartowe(unsigned int zywn, unsigned int rud, unsigned int man)
+    {
+
+    }
+    void przyrostSurowcow()
+    {
+
+    }
+    void handel()
+    {
+
+    }
+    //rozwijanie ludu
+    void budowa()
+    {
+
+    }
+    void badania()
+    {
+
+    }
+    void rozwoj()
+    {
+
+    }
+    //ruch
+    void patrol()
+    {
+
+    }
+    void misja()
+    {
+
+    }
+    Gracz wojna(Gracz wrog)//Gracz//bool//void
+    {
+
+    }
+    int liczeniePktZwyc()
+    {
+
+    }
+};
+
+
+
+/*
+class Terytoriumgrafika?
+
+class Regiongrafika
+{
+    sf::CircleShape shape;
+    sf::Vector2f position;
+    bool selected = false;
+};
+
+class Pionekgrafika
+{
+    sf::RectangleShape shape;
+    sf::Vector2f position;
+    Node* current_node = nullptr;
+};*/
+
+
+class Terytorium
+{
+private:
+    vector<Region> regiony;
+    Gracz *posiadacz;
+public:
+    Terytorium(Gracz* posiada, bool ustandaryzowane)
+    {
+        posiadacz=posiada;
+        if(ustandaryzowane)
+        {
+            //terytorium z pojednym ka¿dego typu pola
+        }
+    }
+    ~Terytorium(){}
+    wczytaj(string nazwaPliku, int pozycja, char formatPozycji)
+    {
+        //otwarcie i odczyt z pliku wszystkich regionów
+    }
+};
+
+class Region
+{
+private:
+    //wewnêtrzne cechy:
+    string nazwa;
+    string surowiec;
+    bool przekraczalny;
+    //grafika
+public:
+    //relacje
+    Terytorium* wewnatrz;
+    vector <Region*> sasiednie;//alternatywa wskaŸnikowa
+    //vector <int> sasiednie;//alternatywa indeksowa
+    vector <Pionek*> pionki;
+
+    Region(string typ, string sur, bool przek, Terytorium* wew, vector <int> sas/*vector <*Region> sas*/)
+    {
+        nazwa=typ;
+        surowiec=sur;//ew. zamiana by surowiec by³ zale¿ny od typu(nie implementowane w tej formie bo case nie dzia³a na stringi)
+        //przekraczalny=true;//alternatywnie zamiast wersji z "przek"
+        przekraczalny=przek;
+
+        //konwersja indeksów regionów na wskaŸniki.
+    }
+    ~Region(){}
+
+    string getNazwa() const
+    {
+        return nazwa;
+    }
+    string getSurowiec() const
+    {
+        return surowiec;
+    }
+};
+
+
+//aspekt graficzny zintegrować potem w te same klasy(do konstruktorów pionka dodac okreslenie koloru na podstawie gracza), albo
+class Pionek
+{
+public:
+    Region *mojRegion;
+    Gracz *posiadacz;
+    bool stoi;
+
+    Pionek(Gracz* posiada)
+    {
+        stoi=true;
+        posiadacz=posiada;
+    }
+    Pionek(Gracz* posiada, Region* region)
+    {
+        stoi=true;
+        posiadacz=posiada;
+        mojRegion=region;
+    }
+    ~Pionek(){}
+
+    void umieszczenie(Region* region)
+    {
+        mojRegion=region;
+        //modyfikacje regionu
+    }
+    void przemieszczenie(Region* region)
+    {
+        //for()//warunek bycia s¹siadem obecnego regionu
+        mojRegion=region;
+        //modyfikacje regionów
+    }
+};
+
+
+class Gra
+{
+public:
+    vector <Gracz> gracze;
+    vector <Runda> rundy;
+
+    Gra(bool nowa)
+    {
+        if (nowa)
+        {
+            int iluGraczy;
+            string nazwa, kolor;
+            cout<<"Podaj liczbę graczy(od 2 do 5): ";//liczby domyślne z normalnej gry
+            cin>>iluGraczy;
+            for (int i=0; i<iluGraczy; i++)
+            {
+                cout<<"Wprowadź nazwę i kolor gracza.";
+                cout<<"Nazwa:";
+                cin>>nazwa;
+                cout<<"kolor(lista):";
+                cin>>kolor;
+                Gracz nowy(nazwa, kolor);
+                gracze.push_back(nowy);
+            }
+        }
+        else
+        {
+            string wczytywana;
+            cout<<"Podaj nazwę wczytywanej gry(z rozszerzeniem): ";
+            cin>>wczytywana;
+            wczytaj(wczytywana);
+        }
+    }
+    ~Gra()
+    {
+
+    }
+    //koniec
+    void zakoncz()
+    {
+
+    }
+    vector <int> liczeniePktZwyc()
+    {
+        vector <int> wyniki;
+        return wyniki;
+    }
+    //stan gry
+    void wczytaj(string nazwaPliku)
+    {
+
+    }
+    void pokaz()
+    {
+
+    }
+    void zapisz()
+    {
+
+    }
+};
+
 
 int main()
 {
+    int odp=0;
+    while(odp<4)
+    {
+        cout<<"\nOpcje:\n 1. Nowa gra. \n 2. Wczytaj Gre. \n 3. Zmień plik wczytania terytoriów(domyślnie: Terytoria.txt, obecnie: "<<plikTerytoriow<<"). \n 4. Zakończ.";
+        cin>>odp;
+        switch(odp)
+        {
+        case 1:
+            {
+            Gra gra(true);
+            break;
+            }
+        case 2:
+            {
+            Gra gra(false);
+            break;
+            }
+        case 3:
+            {
+            cout<<"Nowa nazwa pliku terytoriów(z rozszerzeniem): ";
+            cin>>plikTerytoriow;
+            break;
+            }
+        }
+    }
     return 0;
 }
