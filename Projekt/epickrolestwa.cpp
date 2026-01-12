@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <SFML/Graphics.hpp>
+//#include <SFML/Graphics.hpp>
 /*#include <memory>
 #include <sstream>
 #include <vector>
@@ -53,27 +53,40 @@ protected:
     string kolor;//zamiana na kolor typu pozycyjnego?
     string nazwa;
 
-    //stopnie rozwoju
-    unsigned int poziomWiezy;
-    unsigned int poziomMagii;
-    //plansze
-    vector<Pionek>pionki;//Lub: zmiana na tablice statyczn¹ i poprostu dania nulla jako region i umieszczenia orzy rozwoju
-    //Pionek pionki[7];
-
     //zasoby
     unsigned int zywnosc;//3
     unsigned int ruda;//1
     unsigned int mana;//2
+
+    //stopnie rozwoju
+    unsigned int poziomWiezy;
+    unsigned int poziomMagii;
+    //plansze
 public:
+    vector<Pionek>pionki;//Lub: zmiana na tablice statyczn¹ i poprostu dania nulla jako region i umieszczenia orzy rozwoju
+    Terytorium *mojeTerytorium;
+    //Pionek pionki[7];
+
+    
+//public:
     Gracz(string kol, string nazw)
     {
-
+        kolor = kol;
+        nazwa = nazw;
+        poziomWiezy = 0;
+        poziomMagii = 0;
+        zywnosc = 3;
+        ruda = 1;
+        mana = 2;
+        mojeTerytorium=nullptr;
     }
     ~Gracz(){}
     //surowce
     void setSurowceStartowe(unsigned int zywn, unsigned int rud, unsigned int man)
     {
-
+        zywnosc = zywn;
+        ruda = rud;
+        mana = man;
     }
     void przyrostSurowcow()
     {
@@ -150,7 +163,7 @@ public:
         }
     }
     ~Terytorium(){}
-    wczytaj(string nazwaPliku, int pozycja, char formatPozycji)
+    void wczytaj(string nazwaPliku, int pozycja, char formatPozycji)
     {
         //otwarcie i odczyt z pliku wszystkich regionów
     }
@@ -228,16 +241,20 @@ public:
 };
 
 
-class Gra
+class Gra 
 {
 public:
     vector <Gracz> gracze;
     vector <Runda> rundy;
+    int terytWPliku;
 
     Gra(bool nowa)
     {
         if (nowa)
         {
+            cout<<"Czy chcesz zagrać z uproszczonymi terytoriami(T) zamiast pełnych(P)?";
+            char odp;
+            cin>>odp;
             int iluGraczy;
             string nazwa, kolor;
             cout<<"Podaj liczbę graczy(od 2 do 5): ";//liczby domyślne z normalnej gry
@@ -250,6 +267,16 @@ public:
                 cout<<"kolor(lista):";
                 cin>>kolor;
                 Gracz nowy(nazwa, kolor);
+                Terytorium gracza(&nowy, (odp=='T'));//możliwa konieczność zmiany kolejności
+                cout<<"\n "<<nazwa<<" możesz rozłożyć 6 surowców między żywność, rudę i manę, lub zachować rozłożenie domyślne:"<<
+                "\nżywność = 3, ruda = 1, mana = 2,"<<
+                "\nZ - zachowaj, R - rozłóż samemu";
+                cin>>odp;
+                if (odp!='Z')
+                {
+                    int z, m, r;
+                    nowy.setSurowceStartowe(z,r,m);
+                }
                 gracze.push_back(nowy);
             }
         }
@@ -263,7 +290,7 @@ public:
     }
     ~Gra()
     {
-
+        //upewnij się czy wektory się same czyszczą
     }
     //koniec
     void zakoncz()
