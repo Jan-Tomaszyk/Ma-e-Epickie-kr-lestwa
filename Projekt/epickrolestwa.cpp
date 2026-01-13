@@ -14,6 +14,10 @@
 using namespace std; using namespace sf;
 
 string plikTerytoriow = "Terytoria.txt";
+const int n=4;
+string typSurowca[n] = {"żywność","ruda","mana","dowolny"};
+string typPola[n] = {"pole","wzgórza","las","ruiny"};
+
 //predeklaracja klas
 class Gracz;
 class Runda;
@@ -150,16 +154,29 @@ class Pionekgrafika
 
 class Terytorium
 {
-private:
+public:
     vector<Region> regiony;
     Gracz *posiadacz;
-public:
+
     Terytorium(Gracz* posiada, bool ustandaryzowane)
     {
         posiadacz=posiada;
         if(ustandaryzowane)
         {
             //terytorium z pojednym ka¿dego typu pola
+            for (int i=0; i<=n;i++)
+            {
+                vector<int> s;
+                for (int j=0; j<n; j++)
+                {
+                    if(j!=i)
+                    {
+                        s.push_back(j);
+                    }
+                }
+                Region nowy(typPola[i],typSurowca[i],true,this,s);
+                regiony.push_back(nowy);
+            }
         }
     }
     ~Terytorium(){}
@@ -174,14 +191,14 @@ class Region
 private:
     //wewnêtrzne cechy:
     string nazwa;
-    string surowiec;
     bool przekraczalny;
     //grafika
 public:
+    string surowiec;
     //relacje
     Terytorium* wewnatrz;
-    vector <Region*> sasiednie;//alternatywa wskaŸnikowa
-    //vector <int> sasiednie;//alternatywa indeksowa
+    //vector <Region*> sasiednie;//alternatywa wskaŸnikowa
+    vector <int> sasiednie;//alternatywa indeksowa
     vector <Pionek*> pionki;
 
     Region(string typ, string sur, bool przek, Terytorium* wew, vector <int> sas/*vector <*Region> sas*/)
@@ -190,8 +207,13 @@ public:
         surowiec=sur;//ew. zamiana by surowiec by³ zale¿ny od typu(nie implementowane w tej formie bo case nie dzia³a na stringi)
         //przekraczalny=true;//alternatywnie zamiast wersji z "przek"
         przekraczalny=przek;
-
+        wewnatrz=wew;
+        sasiednie=sas;
         //konwersja indeksów regionów na wskaŸniki.
+        /*for (int i = 0; i < sas.size(); i++)
+        {
+
+        }*/
     }
     ~Region(){}
 
