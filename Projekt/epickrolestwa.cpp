@@ -164,7 +164,7 @@ public:
         if(ustandaryzowane)
         {
             //terytorium z pojednym ka¿dego typu pola
-            for (int i=0; i<=n;i++)
+            for (int i=0; i<=n; i++)
             {
                 vector<int> s;
                 for (int j=0; j<n; j++)
@@ -178,6 +178,7 @@ public:
                 regiony.push_back(nowy);
             }
         }
+        //przejście do wczytania w klasie gry
     }
     ~Terytorium(){}
     void wczytaj(string nazwaPliku, int pozycja, char formatPozycji)
